@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import HomePage from "./pages/home";
+import FeedPage from "./pages/feed";
+import NotFoundPage from "./pages/notfound";
+import { UserContext } from "./auth";
+import LoginPage from "./pages/login";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+export default function App() {
+    const { currentUser } = React.useContext(UserContext);
+    console.log(!currentUser)
+    if (!currentUser) {
+        return (<BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
+        </BrowserRouter>
+        );
+    }
+
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<FeedPage />} />
+                <Route path="/explorer" element={<HomePage />} />
+                <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+        </BrowserRouter>);
 }
-
-export default App;
